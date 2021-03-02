@@ -85,7 +85,7 @@ auth_ldap_service_accounts:
     ktmode: "0640"
 
 # Permissions. This should give you a sensible default, tweak as needed
-auth_ldap_noncritical_filter: "dn || krbLastSuccessfulAuth || krbLastPwdChange || krbPasswordExpiration || krbLoginFailedCount || uid || objectClass || uidNumber || gidNumber || sn || homeDirectory || mail || givenName || cn || sendAlias || alias || mailboxTransport || canReceiveExternally || canSendExternally || mailboxQuota || primaryMail"
+auth_ldap_noncritical_filter: "dn || krbLastSuccessfulAuth || krbLastPwdChange || krbPasswordExpiration || krbLoginFailedCount || uid || objectClass || uidNumber || gidNumber || sn || homeDirectory || mail || givenName || cn || sendAlias || alias || mailboxTransport || canReceiveExternally || canSendExternally || mailboxQuota || primaryMail || memberOf"
 auth_ldap_noncritical_group_filter: "dn || objectClass || cn || member || memberUid || description || uniqueMember || alias || sendAlias"
 auth_ldap_permissions:
   - target: "{{ auth_ldap_domain_ldap }}"
@@ -122,5 +122,14 @@ auth_ldap_system_users:
     gid: 1000
     initialPassword: "{{ auth_kerberos_ldap_password }}"
 
+# `inetUser` is added, too, if the memberOf plugin is enabled
+auth_ldap_user_objectclasses:
+  - posixAccount
+  - top
+  - inetOrgPerson
+
 # Whether to actually store the pam kerberos passthrough config
 auth_ldap_store_pam: True
+
+# Whether to enable the memberOf plugin
+auth_ldap_use_memberof_plugin: False

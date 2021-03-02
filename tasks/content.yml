@@ -4,10 +4,7 @@
     ldap_entry:
       dn: "uid={{ item.id }},ou=Users,{{ auth_ldap_domain_ldap }}"
       server_uri: "{{ auth_ldap_ansible_url }}"
-      objectClass:
-        - posixAccount
-        - top
-        - inetOrgPerson
+      objectClass: "{{ auth_ldap_user_objectclasses }}"
       bind_dn: "cn=Directory Manager"
       bind_pw: "{{ auth_ldap_admin_pwd }}"
       state: present

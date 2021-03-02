@@ -128,3 +128,20 @@
     with_dict:
       nsslapd-pluginEnabled: 'on'
     notify: restart dirsrv
+
+# Disable replication of the memberOf field in multi master setup
+# this should be done according to the documentation [here](https://access.redhat.com/solutions/28282)
+  - name: Configure replication for memberOf plugin
+    ldap_attr:
+      dn: "cn={{ item[0] }}-to-{{ item[1] }},cn=replica,cn={{ auth_ldap_domain_ldap | replace(\"=\", \"\\=\") | replace(\",\", \"\\,\")}},cn=mapping tree,cn=config" 
+      server_uri: "{{ auth_ldap_ansible_url }}"
+      bind_dn: "cn=Directory Manager"
+      bind_pw: "{{ auth_ldap_admin_pwd }}"
+      state: exact
+      name: "nsds5replicatedattributelist"
+      values: (objectclass=*) $ EXCLUDE memberof
+    when: (item[0] != item[1]) and (item[1] == ansible_fqdn)
+    with_cartesian:
+      - "{{ groups[auth_ldap_group] }}"
+      - "{{ groups[auth_ldap_group] }}"
+    notify: restart dirsrv

@@ -22,6 +22,10 @@
       - ldap
       - kerberos
 
+  - import_tasks: variable-initialisation.yml
+    tags:
+      - ldap
+
   - import_tasks: 389-setup.yml
     tags:
       - ldap

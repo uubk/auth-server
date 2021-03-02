@@ -292,5 +292,18 @@
       nsslapd-exclude-suffix: 'cn=config'
     notify: restart dirsrv
 
+  - name: Enable or disable Memberof Plugin
+    ldap_attr:
+      dn: "cn=MemberOf Plugin,cn=plugins,cn=config"
+      server_uri: "{{ auth_ldap_ansible_url }}"
+      bind_dn: "cn=Directory Manager"
+      bind_pw: "{{ auth_ldap_admin_pwd }}"
+      state: exact
+      name: "{{ item.key }}"
+      values: "{{ item.value }}"
+    with_dict:
+      nsslapd-pluginEnabled: "{% if auth_ldap_use_memberof_plugin %}on{% else %}off{% endif %}"
+    notify: restart dirsrv
+
   # If we changed the haproxy config, this will restart the server and activate it
   - meta: flush_handlers

@@ -1,0 +1,6 @@
+---
+
+  - name: Add inetUser to system users
+    when: auth_ldap_use_memberof_plugin | bool
+    set_fact:
+      auth_ldap_user_objectclasses: "{{ auth_ldap_user_objectclasses + ['inetUser'] }}"

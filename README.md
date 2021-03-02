@@ -33,6 +33,7 @@ This role sets up 389ds in multi-master mode.
 | `auth_kerberos_admin_privs` | `[]` | Kerberos principals to grant administrative permissions to (see defaults/main.yml for format) |
 | `auth_ldap_store_pam` | `True` | Whether to actually store the generated 389ds PAM config. Useful if you want to customize it using another role |
 |`auth_kerberos_curves` | `edwards25519` | Curves to use for kerberos SPAKE |
+| `auth_ldap_use_memberof_plugin` | `False` | Whether to enable the `memberOf` LDAP plugin. |
 
 Users can be created by putting them into `auth_ldap_users` as a dict with the following format:
 ```
@@ -46,6 +47,14 @@ auth_ldap_users:
     mail: "test@example.org"
 ```
 After running the playbook, use `kadmin.local` on one of the servers and do `cpw foobar` to set a password.
+
+## FAQ
+
+### Enabling memberOf plugin
+If you enable the memberOf plugin by setting the `auth_ldap_user_memberof_plugin` variable to true, you need to pay attention to a few points:
+
+* The user objects that should have the memberOf need to have the `objectClass` `inetUser` set. More information about `inetUser` can be found [here](https://msg.wikidoc.info/index.php/InetUser_LDAP_Object_Class#targetText=InetUser%20LDAP%20Object%20Class&targetText=For%20Mail%3A,for%20creating%20a%20mail%20account.&targetText=Group%20entries%20may%20be%20extended%20with%20this%20class.).
+* If you're enabling memberOf on an existing database you will have to do an initial sync of the memberOf field, as described in section 5 [here](https://access.redhat.com/solutions/28282).
 
 ## License
 Apache 2.0, except for the included LDAP schemas:
