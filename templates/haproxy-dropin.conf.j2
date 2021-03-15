@@ -9,7 +9,11 @@ frontend {{ item }}-ldap-front
 backend {{ item }}-ldap-back
         mode tcp
         option ldap-check
+{% if auth_ldap_use_external_domain %}
+        server remote {{ hostvars[item]['auth_ldap_external_domain'] }}:60389 ssl crt /etc/dirsrv/client.pem ca-file /etc/dirsrv/ca.pem verify required check check-ssl
+{% else %}
         server remote {{ item }}:60389 ssl crt /etc/dirsrv/client.pem ca-file /etc/dirsrv/ca.pem verify required check check-ssl
+{% endif %}
 
 {% endif %}
 {% endfor %}
