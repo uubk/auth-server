@@ -6,6 +6,11 @@ auth_ldap_domain_suffix: None
 # If you have subdomains with hosts, you might want to add them here
 auth_ldap_domain_subdomains: []
 
+# If your LDAP servers are not mutually reachable via their FQDN, set this for
+# replication
+auth_ldap_use_external_domain: False
+auth_ldap_external_domain: None
+
 # LDAP admin credentials (you need to change these)
 auth_ldap_admin_pwd: None
 auth_ldap_sync_pwd: None
